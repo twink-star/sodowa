@@ -10,72 +10,90 @@
 
 body{
     font-family:sans-serif;
-    background:#f2f4f7;
-    padding:20px;
-    max-width:700px;
-    margin:auto;
+    background:#f0f2f5;
+    margin:0;
+    padding:12px;
 }
 
-h1{
-    text-align:center;
+.container{
+    max-width:900px;
+    margin:auto;
 }
 
 .card{
     background:white;
-    padding:20px;
     border-radius:12px;
-    margin-bottom:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    padding:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.top-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.top-row .card{
+    flex:1;
+    min-width:250px;
 }
 
 button{
-    padding:10px 16px;
-    margin:5px;
-    font-size:16px;
+    padding:8px 14px;
+    margin:4px;
+    font-size:14px;
     cursor:pointer;
+}
+
+input[type="number"]{
+    width:60px;
+    font-size:14px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    text-align:center;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:6px;
 }
 
 .dice-area{
     display:flex;
-    justify-content:space-around;
-    margin-top:20px;
+    gap:10px;
+    margin-top:10px;
 }
 
 .dice-box{
-    text-align:center;
-    width:45%;
+    flex:1;
     background:#fafafa;
     border-radius:10px;
-    padding:15px;
+    padding:10px;
+    text-align:center;
 }
 
 .dice-name{
     font-size:24px;
-    margin-bottom:10px;
     min-height:32px;
-}
-
-.result-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-}
-
-.result-item{
-    background:#fafafa;
-    padding:10px;
-    border-radius:8px;
+    margin-bottom:10px;
 }
 
 .output{
-    margin-top:10px;
     font-size:18px;
     word-break:break-all;
+    margin-top:10px;
 }
 
-input[type="number"]{
-    font-size:18px;
-    width:100px;
+@media(max-width:600px){
+
+    .dice-area{
+        flex-direction:column;
+    }
+
 }
 
 </style>
@@ -83,148 +101,140 @@ input[type="number"]{
 
 <body>
 
-<h1>SW2.5 成長ツール</h1>
+<div class="container">
 
-<div class="card">
+    <div class="top-row">
 
-    <h2>成長回数</h2>
+        <div class="card">
 
-    <input type="number" id="growthCountInput" min="0" value="0">
+            <h3>成長回数</h3>
 
-    <button onclick="setGrowthCount()">
-        設定
-    </button>
+            <input type="number"
+                   id="growthCountInput"
+                   min="0"
+                   value="0">
 
-    <p>
-        残り成長回数：
-        <span id="growthCount">0</span>
-    </p>
-
-</div>
-
-<div class="card">
-
-    <h2>勇者の証</h2>
-
-    <label>
-        <input type="radio" name="proof" value="技">
-        技
-    </label>
-
-    <label>
-        <input type="radio" name="proof" value="体">
-        体
-    </label>
-
-    <label>
-        <input type="radio" name="proof" value="心">
-        心
-    </label>
-
-</div>
-
-<div class="card">
-
-    <button onclick="rollDice()">
-        サイコロを振る
-    </button>
-
-    <button onclick="useProof()">
-        勇者の証を使用
-    </button>
-
-    <div class="dice-area">
-
-        <div class="dice-box">
-
-            <div id="leftName" class="dice-name">
-                -
-            </div>
-
-            <button onclick="chooseLeft()">
-                左を選ぶ
+            <button onclick="setGrowthCount()">
+                設定
             </button>
+
+            <p>
+                残り：
+                <span id="growthCount">0</span>
+            </p>
 
         </div>
 
-        <div class="dice-box">
+        <div class="card">
 
-            <div id="rightName" class="dice-name">
-                -
-            </div>
+            <h3>勇者の証</h3>
 
-            <button onclick="chooseRight()">
-                右を選ぶ
-            </button>
+            <label>
+                <input type="radio"
+                       name="proof"
+                       value="技">
+                技
+            </label>
+
+            <label>
+                <input type="radio"
+                       name="proof"
+                       value="体">
+                体
+            </label>
+
+            <label>
+                <input type="radio"
+                       name="proof"
+                       value="心">
+                心
+            </label>
 
         </div>
 
     </div>
 
-</div>
+    <div class="card">
 
-<div class="card">
+        <button onclick="rollDice()">
+            サイコロを振る
+        </button>
 
-    <h2>成長結果</h2>
+        <button onclick="useProof()">
+            勇者の証を使用
+        </button>
 
-    <div class="result-grid">
+        <button onclick="resetAll()">
+            リセット
+        </button>
 
-        <div class="result-item">
-            器用：<span id="g0">0</span>
-        </div>
+        <div class="dice-area">
 
-        <div class="result-item">
-            敏捷：<span id="g1">0</span>
-        </div>
+            <div class="dice-box">
 
-        <div class="result-item">
-            筋力：<span id="g2">0</span>
-        </div>
+                <div id="leftName"
+                     class="dice-name">
+                    -
+                </div>
 
-        <div class="result-item">
-            生命：<span id="g3">0</span>
-        </div>
+                <button onclick="chooseLeft()">
+                    左を選ぶ
+                </button>
 
-        <div class="result-item">
-            知力：<span id="g4">0</span>
-        </div>
+            </div>
 
-        <div class="result-item">
-            精神：<span id="g5">0</span>
+            <div class="dice-box">
+
+                <div id="rightName"
+                     class="dice-name">
+                    -
+                </div>
+
+                <button onclick="chooseRight()">
+                    右を選ぶ
+                </button>
+
+            </div>
+
         </div>
 
     </div>
 
-    <br>
+    <div class="card">
 
-    <button onclick="exportResult()">
-        成長結果を出力
-    </button>
+        <h3>能力値</h3>
 
-    <div id="output" class="output"></div>
+        <table>
 
-</div>
+            <tr>
+                <th>能力</th>
+                <th>初期</th>
+                <th>成長</th>
+                <th>合計</th>
+                <th>ボーナス</th>
+            </tr>
 
-<div class="card">
+            <tbody id="statusTable"></tbody>
 
-    <button onclick="resetAll()">
-        リセット
-    </button>
+        </table>
+
+    </div>
+
+    <div class="card">
+
+        <button onclick="exportResult()">
+            成長結果を出力
+        </button>
+
+        <div id="output" class="output"></div>
+
+    </div>
 
 </div>
 
 <script>
 
 const names = [
-    "器用度",
-    "敏捷度",
-    "筋力",
-    "生命力",
-    "知力",
-    "精神力"
-];
-
-const shortNames = [
     "器用",
     "敏捷",
     "筋力",
@@ -243,16 +253,20 @@ const state = {
 
     growthCount:0,
 
+    base:[0,0,0,0,0,0],
+
     growth:[0,0,0,0,0,0]
 
 };
 
 function setGrowthCount(){
 
-    const val =
-        Number(document.getElementById("growthCountInput").value);
-
-    state.growthCount = val;
+    state.growthCount =
+        Number(
+            document.getElementById(
+                "growthCountInput"
+            ).value
+        );
 
     render();
 
@@ -291,19 +305,31 @@ function renderDice(){
 
     if(state.leftDice !== null){
 
-        document.getElementById("leftName").textContent =
+        document.getElementById(
+            "leftName"
+        ).textContent =
             names[state.leftDice];
+
+    }else{
+
+        document.getElementById(
+            "leftName"
+        ).textContent = "-";
 
     }
 
     if(state.rightDice !== null){
 
-        document.getElementById("rightName").textContent =
+        document.getElementById(
+            "rightName"
+        ).textContent =
             names[state.rightDice];
 
     }else{
 
-        document.getElementById("rightName").textContent = "-";
+        document.getElementById(
+            "rightName"
+        ).textContent = "-";
 
     }
 
@@ -326,7 +352,9 @@ function useProof(){
     }
 
     const proof =
-        document.querySelector('input[name="proof"]:checked');
+        document.querySelector(
+            'input[name="proof"]:checked'
+        );
 
     if(!proof){
 
@@ -376,10 +404,9 @@ function useProof(){
 
     }
 
-    const d =
+    state.leftDice =
         Math.floor(Math.random()*6);
 
-    state.leftDice = d;
     state.rightDice = null;
 
     state.proofUsed = true;
@@ -439,27 +466,55 @@ function growthProcess(d){
 
 function render(){
 
-    document.getElementById("growthCount").textContent =
+    document.getElementById(
+        "growthCount"
+    ).textContent =
         state.growthCount;
+
+    renderDice();
+
+    const tbody =
+        document.getElementById(
+            "statusTable"
+        );
+
+    tbody.innerHTML = "";
 
     for(let i=0;i<6;i++){
 
-        document.getElementById("g"+i).textContent =
+        const baseInput =
+            `<input type="number"
+                    min="0"
+                    value="${state.base[i]}"
+                    onchange="changeBase(${i}, this.value)">`;
+
+        const total =
+            state.base[i] +
             state.growth[i];
 
+        const bonus =
+            Math.floor(total / 6);
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${names[i]}</td>
+                <td>${baseInput}</td>
+                <td>${state.growth[i]}</td>
+                <td>${total}</td>
+                <td>${bonus}</td>
+            </tr>
+        `;
+
     }
 
-    if(state.leftDice === null){
+}
 
-        document.getElementById("leftName").textContent = "-";
+function changeBase(index, value){
 
-    }
+    state.base[index] =
+        Number(value);
 
-    if(state.rightDice === null){
-
-        document.getElementById("rightName").textContent = "-";
-
-    }
+    render();
 
 }
 
@@ -472,7 +527,7 @@ function exportResult(){
         if(state.growth[i] > 0){
 
             result +=
-                shortNames[i] +
+                names[i] +
                 "×" +
                 state.growth[i];
 
@@ -487,8 +542,9 @@ function exportResult(){
 
     }
 
-    document.getElementById("output").textContent =
-        result;
+    document.getElementById(
+        "output"
+    ).textContent = result;
 
 }
 
@@ -502,14 +558,24 @@ function resetAll(){
 
     state.growthCount = 0;
 
-    state.growth = [0,0,0,0,0,0];
+    state.base =
+        [0,0,0,0,0,0];
 
-    document.getElementById("growthCountInput").value = 0;
+    state.growth =
+        [0,0,0,0,0,0];
 
-    document.getElementById("output").textContent = "";
+    document.getElementById(
+        "growthCountInput"
+    ).value = 0;
+
+    document.getElementById(
+        "output"
+    ).textContent = "";
 
     const checked =
-        document.querySelector('input[name="proof"]:checked');
+        document.querySelector(
+            'input[name="proof"]:checked'
+        );
 
     if(checked){
 
