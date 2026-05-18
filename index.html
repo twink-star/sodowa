@@ -132,6 +132,14 @@ th,td{
             <label>
                 <input type="radio"
                        name="proof"
+                       value=""
+                       checked>
+                使用しない
+            </label>
+
+            <label>
+                <input type="radio"
+                       name="proof"
                        value="技">
                 技
             </label>
@@ -356,7 +364,7 @@ function useProof(){
             'input[name="proof"]:checked'
         );
 
-    if(!proof){
+    if(proof.value === ""){
 
         alert("勇者の証を選択してください！");
         return;
@@ -582,6 +590,10 @@ function resetAll(){
         checked.checked = false;
 
     }
+
+    document.querySelector(
+        'input[name="proof"][value=""]'
+    ).checked = true;
 
     render();
 
