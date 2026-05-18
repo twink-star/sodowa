@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SW2.5 成長ツール</title>
+
+<style>
+
+body{
+    font-family:sans-serif;
+    background:#f2f4f7;
+    padding:20px;
+    max-width:700px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+button{
+    padding:10px 16px;
+    margin:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.dice-area{
+    display:flex;
+    justify-content:space-around;
+    margin-top:20px;
+}
+
+.dice-box{
+    text-align:center;
+    width:45%;
+    background:#fafafa;
+    border-radius:10px;
+    padding:15px;
+}
+
+.dice-name{
+    font-size:24px;
+    margin-bottom:10px;
+    min-height:32px;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.result-item{
+    background:#fafafa;
+    padding:10px;
+    border-radius:8px;
+}
+
+.output{
+    margin-top:10px;
+    font-size:18px;
+    word-break:break-all;
+}
+
+input[type="number"]{
+    font-size:18px;
+    width:100px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>SW2.5 成長ツール</h1>
+
+<div class="card">
+
+    <h2>成長回数</h2>
+
+    <input type="number" id="growthCountInput" min="0" value="0">
+
+    <button onclick="setGrowthCount()">
+        設定
+    </button>
+
+    <p>
+        残り成長回数：
+        <span id="growthCount">0</span>
+    </p>
+
+</div>
+
+<div class="card">
+
+    <h2>勇者の証</h2>
+
+    <label>
+        <input type="radio" name="proof" value="技">
+        技
+    </label>
+
+    <label>
+        <input type="radio" name="proof" value="体">
+        体
+    </label>
+
+    <label>
+        <input type="radio" name="proof" value="心">
+        心
+    </label>
+
+</div>
+
+<div class="card">
+
+    <button onclick="rollDice()">
+        サイコロを振る
+    </button>
+
+    <button onclick="useProof()">
+        勇者の証を使用
+    </button>
+
+    <div class="dice-area">
+
+        <div class="dice-box">
+
+            <div id="leftName" class="dice-name">
+                -
+            </div>
+
+            <button onclick="chooseLeft()">
+                左を選ぶ
+            </button>
+
+        </div>
+
+        <div class="dice-box">
+
+            <div id="rightName" class="dice-name">
+                -
+            </div>
+
+            <button onclick="chooseRight()">
+                右を選ぶ
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h2>成長結果</h2>
+
+    <div class="result-grid">
+
+        <div class="result-item">
+            器用：<span id="g0">0</span>
+        </div>
+
+        <div class="result-item">
+            敏捷：<span id="g1">0</span>
+        </div>
+
+        <div class="result-item">
+            筋力：<span id="g2">0</span>
+        </div>
+
+        <div class="result-item">
+            生命：<span id="g3">0</span>
+        </div>
+
+        <div class="result-item">
+            知力：<span id="g4">0</span>
+        </div>
+
+        <div class="result-item">
+            精神：<span id="g5">0</span>
+        </div>
+
+    </div>
+
+    <br>
+
+    <button onclick="exportResult()">
+        成長結果を出力
+    </button>
+
+    <div id="output" class="output"></div>
+
+</div>
+
+<div class="card">
+
+    <button onclick="resetAll()">
+        リセット
+    </button>
+
+</div>
+
+<script>
+
+const names = [
+    "器用度",
+    "敏捷度",
+    "筋力",
+    "生命力",
+    "知力",
+    "精神力"
+];
+
+const shortNames = [
+    "器用",
+    "敏捷",
+    "筋力",
+    "生命",
+    "知力",
+    "精神"
+];
+
+const state = {
+
+    rolled:false,
+    proofUsed:false,
+
+    leftDice:null,
+    rightDice:null,
+
+    growthCount:0,
+
+    growth:[0,0,0,0,0,0]
+
+};
+
+function setGrowthCount(){
+
+    const val =
+        Number(document.getElementById("growthCountInput").value);
+
+    state.growthCount = val;
+
+    render();
+
+}
+
+function rollDice(){
+
+    if(state.growthCount <= 0){
+
+        alert("成長回数がありません！");
+        return;
+
+    }
+
+    if(state.rolled){
+
+        alert("すでに振っています！");
+        return;
+
+    }
+
+    state.leftDice =
+        Math.floor(Math.random()*6);
+
+    state.rightDice =
+        Math.floor(Math.random()*6);
+
+    state.rolled = true;
+    state.proofUsed = false;
+
+    renderDice();
+
+}
+
+function renderDice(){
+
+    if(state.leftDice !== null){
+
+        document.getElementById("leftName").textContent =
+            names[state.leftDice];
+
+    }
+
+    if(state.rightDice !== null){
+
+        document.getElementById("rightName").textContent =
+            names[state.rightDice];
+
+    }else{
+
+        document.getElementById("rightName").textContent = "-";
+
+    }
+
+}
+
+function useProof(){
+
+    if(!state.rolled){
+
+        alert("先にサイコロを振ってください！");
+        return;
+
+    }
+
+    if(state.proofUsed){
+
+        alert("すでに使用しています！");
+        return;
+
+    }
+
+    const proof =
+        document.querySelector('input[name="proof"]:checked');
+
+    if(!proof){
+
+        alert("勇者の証を選択してください！");
+        return;
+
+    }
+
+    const d1 = state.leftDice + 1;
+    const d2 = state.rightDice + 1;
+
+    const type = proof.value;
+
+    if(type === "技"){
+
+        if(d1 <= 2 || d2 <= 2){
+
+            alert("技の勇者の証は使用できません！");
+            return;
+
+        }
+
+    }
+
+    if(type === "体"){
+
+        if(
+            d1 === 3 || d1 === 4 ||
+            d2 === 3 || d2 === 4
+        ){
+
+            alert("体の勇者の証は使用できません！");
+            return;
+
+        }
+
+    }
+
+    if(type === "心"){
+
+        if(d1 >= 5 || d2 >= 5){
+
+            alert("心の勇者の証は使用できません！");
+            return;
+
+        }
+
+    }
+
+    const d =
+        Math.floor(Math.random()*6);
+
+    state.leftDice = d;
+    state.rightDice = null;
+
+    state.proofUsed = true;
+
+    renderDice();
+
+}
+
+function chooseLeft(){
+
+    if(!state.rolled){
+
+        alert("先にサイコロを振ってください！");
+        return;
+
+    }
+
+    growthProcess(state.leftDice);
+
+}
+
+function chooseRight(){
+
+    if(!state.rolled){
+
+        alert("先にサイコロを振ってください！");
+        return;
+
+    }
+
+    if(state.rightDice === null){
+
+        alert("現在は左のみ選択可能です！");
+        return;
+
+    }
+
+    growthProcess(state.rightDice);
+
+}
+
+function growthProcess(d){
+
+    state.growth[d]++;
+
+    state.growthCount--;
+
+    state.leftDice = null;
+    state.rightDice = null;
+
+    state.rolled = false;
+    state.proofUsed = false;
+
+    render();
+
+}
+
+function render(){
+
+    document.getElementById("growthCount").textContent =
+        state.growthCount;
+
+    for(let i=0;i<6;i++){
+
+        document.getElementById("g"+i).textContent =
+            state.growth[i];
+
+    }
+
+    if(state.leftDice === null){
+
+        document.getElementById("leftName").textContent = "-";
+
+    }
+
+    if(state.rightDice === null){
+
+        document.getElementById("rightName").textContent = "-";
+
+    }
+
+}
+
+function exportResult(){
+
+    let result = "";
+
+    for(let i=0;i<6;i++){
+
+        if(state.growth[i] > 0){
+
+            result +=
+                shortNames[i] +
+                "×" +
+                state.growth[i];
+
+        }
+
+    }
+
+    if(result === ""){
+
+        alert("成長結果がありません！");
+        return;
+
+    }
+
+    document.getElementById("output").textContent =
+        result;
+
+}
+
+function resetAll(){
+
+    state.rolled = false;
+    state.proofUsed = false;
+
+    state.leftDice = null;
+    state.rightDice = null;
+
+    state.growthCount = 0;
+
+    state.growth = [0,0,0,0,0,0];
+
+    document.getElementById("growthCountInput").value = 0;
+
+    document.getElementById("output").textContent = "";
+
+    const checked =
+        document.querySelector('input[name="proof"]:checked');
+
+    if(checked){
+
+        checked.checked = false;
+
+    }
+
+    render();
+
+    alert("リセット完了！");
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
