@@ -347,14 +347,14 @@ function useProof(){
 
     if(!state.rolled){
 
-        alert("先にサイコロを振ってください！");
+        alert("先にサイコロを振ってください");
         return;
 
     }
 
     if(state.proofUsed){
 
-        alert("すでに使用しています！");
+        alert("すでに使用しています");
         return;
 
     }
@@ -366,7 +366,7 @@ function useProof(){
 
     if(proof.value === ""){
 
-        alert("勇者の証を選択してください！");
+        alert("勇者の証を選択してください");
         return;
 
     }
@@ -380,7 +380,7 @@ function useProof(){
 
         if(d1 <= 2 || d2 <= 2){
 
-            alert("技の勇者の証は使用できません！");
+            alert("技の勇者の証は使用できません");
             return;
 
         }
@@ -394,7 +394,7 @@ function useProof(){
             d2 === 3 || d2 === 4
         ){
 
-            alert("体の勇者の証は使用できません！");
+            alert("体の勇者の証は使用できません");
             return;
 
         }
@@ -405,7 +405,7 @@ function useProof(){
 
         if(d1 >= 5 || d2 >= 5){
 
-            alert("心の勇者の証は使用できません！");
+            alert("心の勇者の証は使用できません");
             return;
 
         }
@@ -427,7 +427,7 @@ function chooseLeft(){
 
     if(!state.rolled){
 
-        alert("先にサイコロを振ってください！");
+        alert("先にサイコロを振ってください");
         return;
 
     }
@@ -440,14 +440,14 @@ function chooseRight(){
 
     if(!state.rolled){
 
-        alert("先にサイコロを振ってください！");
+        alert("先にサイコロを振ってください");
         return;
 
     }
 
     if(state.rightDice === null){
 
-        alert("現在は左のみ選択可能です！");
+        alert("現在は左のみ選択可能です");
         return;
 
     }
@@ -545,7 +545,7 @@ function exportResult(){
 
     if(result === ""){
 
-        alert("成長結果がありません！");
+        alert("成長結果がありません");
         return;
 
     }
@@ -596,8 +596,7 @@ function resetAll(){
     ).checked = true;
 
     render();
-
-    alert("リセット完了！");
+    alert("リセット完了しました");
 
 }
 
